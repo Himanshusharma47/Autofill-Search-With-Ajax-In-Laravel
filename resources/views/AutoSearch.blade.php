@@ -10,30 +10,39 @@
 <body>
     <h2>Autofill Search</h2>
     <div class="search-container">
+        <!-- Input field for user to type their search query -->
         <input type="text" name="search" id="search" autofocus>
         <div class="list"></div>
     </div>
+    <!-- Include jquery  -->
     <script src="{{asset('assets/js/jquery.js')}}"></script>
     <script>
+        //jquery function
         $(document).ready(function(){
+            
             $('#search').on('keyup', function(){
+                // Get the value entered by the user
                 let val = $(this).val();
+                // Send an AJAX request to the 'search' route with the search query
                 $.ajax({
                     url: '{{ route("search") }}',
                     type: 'post',
                     data: 'name='+val+'&_token={{csrf_token()}}',
                     success: function(data){
-                        // Use console.log to output data to the console, not echo.
                         $('.list').html(data);
                     }
                 });
             });
-            $('.list').on('click','li',function(){
-                let value = $(this).text();
-                $('#search').val(value);
-                $('.list').html('');
 
-            });
+            // Attach a click event listener to the list items
+            $('.list').on('click','li',function(){
+                let val = $(this).text();
+                let cid = $(this).val();
+                // Set the search input field value to the clicked item's text
+                $('#search').val(val);
+                // Clear the list of search results
+                $('.list').html('');               
+            }); 
         });
     </script>
 </body>
